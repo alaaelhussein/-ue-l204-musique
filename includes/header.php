@@ -31,7 +31,7 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 <?php if (!$hideHeader): ?>
     <header class="site-header">
         <div class="container site-header-inner">
-            <a href="<?php echo $baseUrl; ?>.../index.php" class="brand">
+            <a href="<?php echo $baseUrl; ?>../../index.php" class="brand">
                 <div class="brand-logo">♫</div>
                 <div class="brand-text">
                     <span class="brand-title">Médiathèque musique</span>
@@ -74,3 +74,4 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
     <main class="main-content">
         <div class="container">
+
