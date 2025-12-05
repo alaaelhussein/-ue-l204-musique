@@ -5,8 +5,7 @@ Gestion d’albums musicaux (Mini-projets)
 ## Auteurs
 - Guillaume Andrieu
 - Baptiste Saint-Pierre
-- (equipe pedagogique)
-- 
+---
 - Anistratenco Serguei
 - El Hussein Alaa
 - Ferrand Maxime
