@@ -1,0 +1,638 @@
+/* =========================
+   Reset simple
+   ========================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #050816;       /* bleu nuit */
+    color: #f5f5f5;
+    line-height: 1.5;
+}
+
+/* =========================
+   Layout global
+   ========================= */
+.main-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;              /* permet de centrer le contenu verticalement */
+}
+
+.main-content > .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+/* =========================
+   Header
+   ========================= */
+.site-header {
+    background-color: rgba(5, 8, 22, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+}
+
+.site-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+/* Marque / logo */
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #ffb347, #ff7b00);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #050816;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.brand-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.brand-subtitle {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Zone utilisateur */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.user-info-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.user-info-name {
+    opacity: 0.85;
+}
+
+.user-info-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.user-info-actions form {
+    margin: 0;
+}
+
+/* =========================
+   Footer
+   ========================= */
+.site-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.5rem 0;
+    font-size: 0.85rem;
+}
+
+.site-footer-inner {
+    text-align: center;
+}
+
+.site-footer-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+    opacity: 0.9;
+}
+
+.site-footer-text {
+    margin-bottom: 1rem;
+    opacity: 0.75;
+}
+
+.site-footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.site-footer-link {
+    color: #ffb347;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.site-footer-link:hover {
+    text-decoration: underline;
+}
+
+.site-footer-copy {
+    opacity: 0.6;
+    font-size: 0.8rem;
+}
+
+/* =========================
+   Boutons
+   ========================= */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1.3rem;
+    border-radius: 999px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff7b00, #ffb347);
+    color: #050816;
+    box-shadow: 0 8px 20px rgba(255, 135, 29, 0.35);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(255, 135, 29, 0.45);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #f5f5f5;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.btn-danger {
+    background-color: #ff4d4f;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #ff7875;
+}
+
+/* bouton pleine largeur (login) */
+.btn-full {
+    width: 100%;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #ffb347;
+    padding: 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* =========================
+   Cartes
+   ========================= */
+.card {
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), rgba(5, 8, 22, 0.96));
+    border-radius: 18px;
+    padding: 1.75rem;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Carte de connexion plus grande */
+.card--auth {
+    max-width: 420px;
+    padding: 1.8rem;
+    margin: 0 auto;
+}
+
+/* espacement dans la carte de login */
+.card--auth .brand {
+    margin-bottom: 0.6rem;
+}
+
+/* =========================
+   Carte héros (page d'accueil)
+   ========================= */
+.card--hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-hero-label {
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin-bottom: 0.4rem;
+}
+
+.card-hero-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.9rem;
+}
+
+.card-hero-list {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    padding-left: 0;
+}
+
+.card-hero-icon {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    opacity: 0.15;
+    font-size: 4rem;
+}
+
+/* =========================
+   Formulaires
+   ========================= */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 0.35rem;
+    opacity: 0.9;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: rgba(5, 8, 22, 0.9);
+    color: #f5f5f5;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.form-control:focus {
+    border-color: #ffb347;
+    box-shadow: 0 0 0 1px rgba(255, 180, 71, 0.55);
+    background-color: rgba(5, 8, 22, 1);
+}
+
+/* Etat erreur */
+.form-group.error .form-control {
+    border-color: #ff4d4f;
+    box-shadow: 0 0 0 1px rgba(255, 77, 79, 0.4);
+}
+
+.form-error {
+    color: #ffb3b5;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* =========================
+   Messages (alertes)
+   ========================= */
+.alert {
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.alert-error {
+    background-color: rgba(255, 77, 79, 0.12);
+    color: #ffb3b5;
+    border: 1px solid rgba(255, 77, 79, 0.45);
+}
+
+.alert-success {
+    background-color: rgba(56, 158, 13, 0.16);
+    color: #c9f7c1;
+    border: 1px solid rgba(56, 158, 13, 0.55);
+}
+
+/* =========================
+   Auth / page de connexion
+   ========================= */
+.auth-layout {
+    flex: 1;                            /* prend toute la hauteur dispo du main */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 0;
+}
+
+.auth-inner {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    font-size: 0.8rem;
+    opacity: 0.75;
+    margin-bottom: 1rem;
+}
+
+.auth-footer-links {
+    margin-top: 0.7rem;
+    font-size: 0.8rem;
+    text-align: center;
+    opacity: 0.75;
+}
+
+.auth-footer-links a {
+    color: #ffb347;
+    text-decoration: underline;
+}
+
+/* =========================
+   Titres de page
+   ========================= */
+.page-header {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.page-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.page-description {
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+/* =========================
+   Barres de recherche / filtres
+   ========================= */
+.search-bar {
+    margin: 1.5rem 0 1.25rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.search-with-icon {
+    position: relative;
+}
+
+.search-with-icon-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.search-with-icon .form-control {
+    padding-left: 2.25rem;
+}
+
+/* =========================
+   Tableaux
+   ========================= */
+.table-wrapper {
+    margin-top: 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    background-color: rgba(5, 8, 22, 0.96);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.table thead {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.table th,
+.table td {
+    padding: 0.7rem 1rem;
+    text-align: left;
+}
+
+.table th {
+    font-weight: 500;
+    opacity: 0.85;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.4rem;
+}
+
+/* =========================
+   Formulaires de page (ajout/édition)
+   ========================= */
+.form-layout {
+    max-width: 520px;
+}
+
+/* =========================
+   Home / Page d'accueil
+   ========================= */
+.home-hero {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.home-hero-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+}
+
+.home-hero-text,
+.home-hero-card-wrapper {
+    flex: 1 1 260px;
+    min-width: 260px;
+}
+
+.home-hero-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.home-hero-lead {
+    max-width: 520px;
+    margin-bottom: 1.4rem;
+}
+
+.home-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+/* Section des fonctionnalités */
+.home-features {
+    margin-bottom: 2.5rem;
+}
+
+.home-features-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.home-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.home-feature-title {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}
+
+.home-feature-text {
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.page-section {
+    margin-top: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.form-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.role-badge--admin {
+    background-color: rgba(255, 123, 0, 0.18);
+    color: #ffb347;
+}
+
+.role-badge--user {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #f5f5f5;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width: 768px) {
+    .site-header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-bar {
+        grid-template-columns: 1fr;
+    }
+}
