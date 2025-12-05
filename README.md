@@ -6,7 +6,7 @@ Gestion d’albums musicaux (Mini-projets)
 - Guillaume Andrieu
 - Baptiste Saint-Pierre
 ---
-- Anistratenco Serguei
+- Anistratenco Serghei
 - El Hussein Alaa
 - Ferrand Maxime
 - Shakurov Matin
