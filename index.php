@@ -109,10 +109,6 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
                     <li>Ajout et modification pour les admins.</li>
                     <li>Interface responsive orientée desktop.</li>
                 </ul>
-
-                <div class="card-hero-icon">
-                    ♫
-                </div>
             </div>
         </div>
     </div>
