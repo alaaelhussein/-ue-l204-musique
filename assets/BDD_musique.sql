@@ -99,9 +99,32 @@ CREATE TABLE `utilisateurs` (
 -- Déchargement des données de la table `utilisateurs`
 --
 
+-- --------------------------------------------------------
+-- Administrateur  : Test1234!
+-- Utilisateur1..19: Test1234!
+-- --------------------------------------------------------
+
 INSERT INTO `utilisateurs` (`id`, `identifiant`, `motdepasse`, `role`) VALUES
-(1, 'Administrateur', '$2y$10$Cx7yCWYxC7Po9sp.efMqceG1OWg/zbFzziXMqRC2tzD4O19A7FmHu', 'admin'),
-(2, 'Utilisateur1', '$2y$10$h4XCcwr6jNpDEYQUilqTfOgvUNv01eVbrY.cnNVyoct3RIEdYR51e', 'user');
+(1, 'Administrateur', '$2y$10$qVhEZnwsfxc6/E5ttT/CseBs8ID0Lhr8WMrjCKQ69FBYVU9KbJZo.', 'admin'),
+(2, 'Utilisateur1', '$2y$10$Vtvh.Y4NJSK58f3dHcDqFe9ZzlTEG5uxOLMMQ2mFvwG9fHODoZAuC', 'user'),
+(3, 'Utilisateur2', '$2y$10$Pqn1sNYHmcijk2igyRMxUuMYJk.iBL6GRbFKLTK6zLqEzjfURFmjW', 'user'),
+(4, 'Utilisateur3', '$2y$10$FjxB6DX6svHfVJJhjcWJM.QNJmhWzd.8Q9JBiM0YG2sOd/.V49wpu', 'user'),
+(5, 'Utilisateur4', '$2y$10$2skgvxeyXKwUKBQISOoRp.B6uBFACKozrgExfXj1bwiFnCQABT5Te', 'user'),
+(6, 'Utilisateur5', '$2y$10$e2/oh9LfUyEhlB7DKUJpkOqqbU5UFE6mVQiGmA4.2Bt3tDk4I3DUi', 'user'),
+(7, 'Utilisateur6', '$2y$10$zxClo0xHnYiga6LUU4KhgeGQi5gvA3IP.PSIFXtsDePrh7d3KitRy', 'user'),
+(8, 'Utilisateur7', '$2y$10$33ROuT/x43Sck..GMF20nun0tSbJN80rKmIIJC3IEGfqZtSyAXeh.', 'user'),
+(9, 'Utilisateur8', '$2y$10$giCRjajpmqSqgKJ3E9pwK.tz7KwNRb2lpKYKNof7ZnVba7Pa6FZNO', 'user'),
+(10, 'Utilisateur9', '$2y$10$6ivKS7gl7jYvNh6t/vN6duQYLyidG1X0l3P3.XXTAXUUPpPilXVi2', 'user'),
+(11, 'Utilisateur10', '$2y$10$drOccr55FfU1hZjWPhBhz.lvoX4.UibB3/Vbquvm5erO91nKKkEky', 'user'),
+(12, 'Utilisateur11', '$2y$10$TdLcoy6s9lbwNj8wS8ZZBO7brlYIkRwokIwVesJrAzWQGvZt2YJHS', 'user'),
+(13, 'Utilisateur12', '$2y$10$ku.2OBdXmqSCGwOSkIfrF.Z2Ci8zrsIm3rp3PCTV1DUXvInrXPOrC', 'user'),
+(14, 'Utilisateur13', '$2y$10$rkIKQ3sT7Esm2aPMjwe70OTOZLtgtcxI.nlPZyxiru//EZGrwdhIW', 'user'),
+(15, 'Utilisateur14', '$2y$10$SsFtCB9jVxqr1LS1ofnewu9nP/bJVeJXZofDZGllF9jnl.CDgLx8W', 'user'),
+(16, 'Utilisateur15', '$2y$10$pbOL7xy4MJBwVAsQXx8E2exDHlTHXaieY32oKVyajsY/8ZNEXdjgm', 'user'),
+(17, 'Utilisateur16', '$2y$10$nH0cSpsQhzooCz2CpM1hUeYYRIImL7QXUXG6lKCNbj91g8EYUDnsm', 'user'),
+(18, 'Utilisateur17', '$2y$10$QbmaWGI8pxkfMlpUgWlK7eiji25Nt7SeFsIM.GAsZzBjyXL6G1wUm', 'user'),
+(19, 'Utilisateur18', '$2y$10$urUDFAKpBn52CH4rxV/jIebuzz98xam3aOTVH4W3hfkMs09m6tqiO', 'user'),
+(20, 'Utilisateur19', '$2y$10$/r/5/cytiMlzCQ533Nw7Ce/35FtnyQjrsl66Vw.5DQo5Jg/Yklvrq', 'user');
 
 --
 -- Index pour les tables déchargées
@@ -134,7 +157,7 @@ ALTER TABLE `albums`
 -- AUTO_INCREMENT pour la table `utilisateurs`
 --
 ALTER TABLE `utilisateurs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

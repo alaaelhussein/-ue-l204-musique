@@ -1,25 +1,11 @@
 <?php
-session_start();
+require_once __DIR__ . '/includes/bootstrap.php';
 
-$isLoggedIn = isset($_SESSION['user_id']);
-
-$hideHeader = false;
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+$hideHeader = false; // page d'accueil: on garde le header
 $isLoggedIn = isset($_SESSION['user_id']);
 $isAdmin    = $isLoggedIn && (isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
 
-// Permet aux pages de masquer le header (login.php)
-if (!isset($hideHeader)) {
-    $hideHeader = false;
-}
-
-/*
- * $baseUrl = chemin du dossier courant dans l’URL
- * Exemple : /Mini-projet-musique/pages
- */
+// base url du dossier courant (liens + css)
 $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 ?>
 <!DOCTYPE html>
@@ -36,7 +22,7 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 <?php if (!$hideHeader): ?>
     <header class="site-header">
         <div class="container site-header-inner">
-            <a href="<?php echo $baseUrl; ?>.../index.php" class="brand">
+            <a href="<?php echo $baseUrl; ?>/index.php" class="brand">
                 <div class="brand-logo">♫</div>
                 <div class="brand-text">
                     <span class="brand-title">Médiathèque musique</span>
@@ -62,6 +48,7 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
                         <form action="<?php echo $baseUrl; ?>/pages/login.php" method="post">
                             <input type="hidden" name="action" value="logout">
+                            <?php echo csrf_input(); ?>
                             <button type="submit" class="btn btn-secondary">
                                 Déconnexion
                             </button>
@@ -117,10 +104,10 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
                 </h2>
 
                 <ul class="card-hero-list">
-                    <li>• Recherche par titre, artiste ou année.</li>
-                    <li>• Liste des albums disponibles.</li>
-                    <li>• Ajout et modification pour les admins.</li>
-                    <li>• Interface responsive orientée desktop.</li>
+                    <li>Recherche par titre, artiste ou année.</li>
+                    <li>Liste des albums disponibles.</li>
+                    <li>Ajout et modification pour les admins.</li>
+                    <li>Interface responsive orientée desktop.</li>
                 </ul>
 
                 <div class="card-hero-icon">
@@ -162,29 +149,28 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
     </div>
 </section>
 
-<?php
-?>
+<?php // fin contenu ?>
         </div> <!-- .container -->
     </main>
 
     <footer class="site-footer">
         <div class="container site-footer-inner">
             <div class="site-footer-title">
-                ♫ Médiathèque musicale
+                Médiathèque musicale
             </div>
 
             <div class="site-footer-text">
-                Mini projet étudiant — Gestion d’un catalogue de CD
+                Mini projet UE 204 — Gestion d’un catalogue de CD
             </div>
 
             <nav class="site-footer-nav">
                 <a href="index.php" class="site-footer-link">Accueil</a>
-                <a href="pages\login.php" class="site-footer-link">Connexion</a>
-                <a href="pages\liste_albums.php" class="site-footer-link">Catalogue</a>
+                <a href="pages/login.php" class="site-footer-link">Connexion</a>
+                <a href="pages/liste_albums.php" class="site-footer-link">Catalogue</a>
             </nav>
 
             <div class="site-footer-copy">
-                © <?= date('Y'); ?> — Tous droits réservés.
+                © <?= date('Y'); ?> — Groupe n°8 (S. Anistratenco, A. El Hussein, M. Ferrand, M. Shakurov) 
             </div>
         </div>
     </footer>
