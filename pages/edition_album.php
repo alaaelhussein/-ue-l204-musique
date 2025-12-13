@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
 
-// admin: édition album
+// MF: admin page to edit an album (update + delete)
+// MF: responsibilities: load by id, validate input, run update/delete queries, show feedback
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -14,13 +15,13 @@ if (!$isAdmin) {
     exit;
 }
 
-// bdd
+// MF: db access
 require_once __DIR__ . '/../includes/db.php';
 
 $errors = [];
 $successMessage = null;
 
-// id album
+// MF: album id from query string
 $albumId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$albumId) {
     header('Location: liste_albums.php');
@@ -31,7 +32,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     csrf_require_post();
 }
 
-// delete
+// MF: delete action (post)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     try {
         $stmt = $pdo->prepare('DELETE FROM albums WHERE id = :id');
@@ -44,12 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
     }
 }
 
-// valeurs affichées
+// MF: values displayed in the form
 $titre   = '';
 $artiste = '';
 $annee   = '';
 
-// charge l'album
+// MF: load album row
 try {
     $stmt = $pdo->prepare('SELECT nom_cd, artiste, annee_sortie FROM albums WHERE id = :id');
     $stmt->execute([':id' => $albumId]);
@@ -66,7 +67,7 @@ if (!$album) {
     $annee   = $album['annee_sortie'];
 }
 
-// save
+// MF: save action (post)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save' && $album) {
 
     $titre   = trim($_POST['titre'] ?? '');
@@ -217,3 +218,4 @@ require_once __DIR__ . '/../includes/header.php';
 
 <?php
 require_once __DIR__ . '/../includes/footer.php';
+

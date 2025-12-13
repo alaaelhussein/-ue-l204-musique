@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
 
-// page catalogue + recherche
+// MS: album catalogue page (list + search)
+// MS: responsibilities: multicriteria search (title/artist/year) and admin-only delete
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -10,10 +11,10 @@ if (!isset($_SESSION['user_id'])) {
 
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 
-// bdd
+// MS: db access
 require_once __DIR__ . '/../includes/db.php';
 
-// delete (admin)
+// MS: admin-only delete (post)
 $successMessage = null;
 $errorMessage   = null;
 
@@ -32,11 +33,11 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id
     }
 }
 
-// filtres (get)
+// MS: filters (get)
 $searchTitleArtist = trim($_GET['q'] ?? '');
 $searchYear        = trim($_GET['annee'] ?? '');
 
-// Validation "poussée" côté serveur (simplifiée)
+// MS: lightweight server-side validation
 if ($searchTitleArtist !== '' && mb_strlen($searchTitleArtist, 'UTF-8') > 100) {
     $searchTitleArtist = mb_substr($searchTitleArtist, 0, 100, 'UTF-8');
     $errorMessage = $errorMessage ?? 'La recherche est trop longue (max 100 caractères).';
@@ -50,17 +51,23 @@ if ($searchYear !== '') {
     }
 }
 
-$sql = 'SELECT id, nom_cd, artiste, annee_sortie FROM albums WHERE 1';
+// MS: build sql with optional conditions
+$sql = 'SELECT id, nom_cd, artiste, annee_sortie FROM albums';
+$where = [];
 $params = [];
 
 if ($searchTitleArtist !== '') {
-    $sql .= ' AND (LOWER(nom_cd) LIKE :q OR LOWER(artiste) LIKE :q)';
+    $where[] = '(LOWER(nom_cd) LIKE :q OR LOWER(artiste) LIKE :q)';
     $params[':q'] = '%' . mb_strtolower($searchTitleArtist, 'UTF-8') . '%';
 }
 
 if ($searchYear !== '') {
-    $sql .= ' AND annee_sortie = :annee';
+    $where[] = 'annee_sortie = :annee';
     $params[':annee'] = $searchYear;
+}
+
+if (!empty($where)) {
+    $sql .= ' WHERE ' . implode(' AND ', $where);
 }
 
 $sql .= ' ORDER BY annee_sortie DESC, nom_cd ASC';
@@ -69,7 +76,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $albums = $stmt->fetchAll();
 
-// affichage
+// MS: render
 $hideHeader = false;
 require_once __DIR__ . '/../includes/header.php';
 ?>
@@ -106,7 +113,7 @@ require_once __DIR__ . '/../includes/header.php';
         <label for="q" class="form-label">Titre ou artiste</label>
 
         <span class="search-with-icon-icon" aria-hidden="true">
-            <!-- petite loupe en SVG -->
+            <!-- MS: small svg icon for the search field -->
             <svg viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="6"
                         stroke="currentColor" stroke-width="1.6" fill="none" />
@@ -173,8 +180,8 @@ require_once __DIR__ . '/../includes/header.php';
                     <?php if ($isAdmin): ?>
                         <td>
                             <div class="table-actions">
-                                <a href="edition_album.php?id=<?= (int) $album['id']; ?>"
-                                   class="btn btn-secondary">
+                                          <a href="edition_album.php?id=<?= (int) $album['id']; ?>"
+                                              class="btn btn-secondary">
                                     Modifier
                                 </a>
 
@@ -200,4 +207,5 @@ require_once __DIR__ . '/../includes/header.php';
 
 <?php 
 require_once __DIR__ . '/../includes/footer.php'; ?>
+
 

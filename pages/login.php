@@ -1,9 +1,10 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
 
-// page login
+// AH: authentication page (login + logout)
+// AH: responsibilities: sessions (login/logout), password_verify, and csrf protection on post
 
-// logout (post)
+// AH: logout (post)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'logout') {
     csrf_require_post();
     session_unset();
@@ -15,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'logou
 $isLoggedIn = isset($_SESSION['user_id']);
 require_once __DIR__ . '/../includes/db.php';
 
-// déjà connecté → pas besoin du formulaire
+// AH: already logged in -> no need to show the login form
 if ($isLoggedIn) {
     $username = $_SESSION['user_id'];
     $isAdmin  = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 
-    // on garde le header
+    // AH: keep header visible when logged in
     $hideHeader = false;
     require_once __DIR__ . '/../includes/header.php';
     ?>
@@ -54,7 +55,7 @@ if ($isLoggedIn) {
     exit;
 }
 
-// pas connecté → formulaire
+// AH: not logged in -> show login form
 
 $errorMessage = null;
 $submittedUsername = '';
@@ -65,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     $motdepasse  = $_POST['motdepasse'] ?? '';
     $submittedUsername = $identifiant;
 
+    // AH: csrf check + field validation
     csrf_require_post();
 
     if ($identifiant !== '' && !preg_match('/^[A-Za-z0-9_-]{3,30}$/', $identifiant)) {
@@ -85,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
             $user = $stmt->fetch();
 
             if ($user && password_verify($motdepasse, $user['motdepasse'])) {
+                // AH: mitigate session fixation on successful login
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $user['identifiant'];
                 $_SESSION['role']    = $user['role'];
@@ -101,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     }
 }
 
-// Pour la page de login non connectée, on masque le header
+// AH: hide the main header on the public login page
 $hideHeader = true;
 require_once __DIR__ . '/../includes/header.php';
 ?>
@@ -166,3 +169,4 @@ require_once __DIR__ . '/../includes/header.php';
 </div>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+

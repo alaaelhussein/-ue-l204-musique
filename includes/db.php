@@ -1,5 +1,6 @@
 <?php
-// bdd (pdo)
+// AH: pdo connection used by all pages (database: musique)
+// AH: local xampp defaults (localhost/root/no password) + exceptions + fetch assoc
 $dsn  = 'mysql:host=localhost;dbname=musique;charset=utf8mb4';
 $user = 'root';
 $pass = '';
@@ -12,3 +13,4 @@ try {
 } catch (PDOException $e) {
     die('Erreur de connexion : ' . $e->getMessage());
 }
+

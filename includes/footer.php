@@ -1,4 +1,8 @@
-<?php // footer commun ?>
+<?php
+// AS: shared footer layout
+// AS: keeps links stable by targeting project-root paths
+$rootUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'], 2), '/\\');
+?>
         </div> <!-- .container -->
     </main>
 
@@ -13,9 +17,9 @@
             </div>
 
             <nav class="site-footer-nav">
-                <a href="../index.php" class="site-footer-link">Accueil</a>
-                <a href="login.php" class="site-footer-link">Connexion</a>
-                <a href="liste_albums.php" class="site-footer-link">Catalogue</a>
+                <a href="<?php echo $rootUrl; ?>/index.php" class="site-footer-link">Accueil</a>
+                <a href="<?php echo $rootUrl; ?>/pages/login.php" class="site-footer-link">Connexion</a>
+                <a href="<?php echo $rootUrl; ?>/pages/liste_albums.php" class="site-footer-link">Catalogue</a>
             </nav>
 
             <div class="site-footer-copy">
@@ -26,3 +30,4 @@
 </div> <!-- .main-wrapper -->
 </body>
 </html>
+

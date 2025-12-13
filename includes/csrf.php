@@ -1,7 +1,6 @@
 <?php
-
-// csfr token minimal "maison"
-// pas de framework ici, juste le strict nécessaire.
+// AH: csrf helpers for all post forms (add/edit/delete/logout)
+// AH: uses one session token and validates it on post requests
 
 function csrf_token(): string
 {
@@ -31,9 +30,10 @@ function csrf_require_post(): void
     $token = $_POST['csrf_token'] ?? '';
     $sessionToken = $_SESSION['csrf_token'] ?? '';
 
-    // hash_equals évite des comparaisons "timing-based"
+    // AH: hash_equals avoids timing-based comparisons
     if (!is_string($token) || !is_string($sessionToken) || $sessionToken === '' || !hash_equals($sessionToken, $token)) {
         http_response_code(400);
         die('requête invalide (csrf)');
     }
 }
+
