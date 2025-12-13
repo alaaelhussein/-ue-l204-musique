@@ -1,12 +1,11 @@
-<?php
-?>
+<?php // footer commun ?>
         </div> <!-- .container -->
     </main>
 
     <footer class="site-footer">
         <div class="container site-footer-inner">
             <div class="site-footer-title">
-                ♫ Médiathèque musicale
+                Médiathèque musicale
             </div>
 
             <div class="site-footer-text">

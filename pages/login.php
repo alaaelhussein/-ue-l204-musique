@@ -1,15 +1,11 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/bootstrap.php';
 
-/*
-    Connexion via la table `utilisateurs` :
-    - identifiant
-    - motdepasse (hashé)
-    - role : 'admin' ou 'user'
-*/
+// page login
 
-// Gestion de la déconnexion (formulaire du header et de cette page)
+// logout (post)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'logout') {
+    csrf_require_post();
     session_unset();
     session_destroy();
     header('Location: login.php');
@@ -17,13 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'logou
 }
 
 $isLoggedIn = isset($_SESSION['user_id']);
+require_once __DIR__ . '/../includes/db.php';
 
-// Si déjà connecté : on n’affiche pas le formulaire, mais un message
+// déjà connecté → pas besoin du formulaire
 if ($isLoggedIn) {
     $username = $_SESSION['user_id'];
     $isAdmin  = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 
-    // Ici, on garde le header allumé
+    // on garde le header
     $hideHeader = false;
     require_once __DIR__ . '/../includes/header.php';
     ?>
@@ -43,6 +40,7 @@ if ($isLoggedIn) {
 
                 <form action="login.php" method="post" class="form-actions">
                     <input type="hidden" name="action" value="logout">
+                    <?php echo csrf_input(); ?>
                     <button type="submit" class="btn btn-secondary btn-full">
                         Se déconnecter
                     </button>
@@ -56,20 +54,24 @@ if ($isLoggedIn) {
     exit;
 }
 
-/* --------- Cas non connecté : formulaire de login --------- */
+// pas connecté → formulaire
 
-require_once __DIR__ . '/../includes/db.php';
-
-$errorMessage     = null;
-$identifiantSaisi = '';
+$errorMessage = null;
+$submittedUsername = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
 
-    $identifiant       = trim($_POST['identifiant'] ?? '');
-    $motdepasse        = $_POST['motdepasse'] ?? '';
-    $identifiantSaisi  = $identifiant;
+    $identifiant = trim($_POST['identifiant'] ?? '');
+    $motdepasse  = $_POST['motdepasse'] ?? '';
+    $submittedUsername = $identifiant;
 
-    if ($identifiant === '' || $motdepasse === '') {
+    csrf_require_post();
+
+    if ($identifiant !== '' && !preg_match('/^[A-Za-z0-9_-]{3,30}$/', $identifiant)) {
+        $errorMessage = "Identifiant invalide (3-30 caractères : lettres, chiffres, _ ou -).";
+    }
+
+    if ($errorMessage === null && ($identifiant === '' || $motdepasse === '')) {
         $errorMessage = "Merci de remplir les deux champs.";
     } else {
         try {
@@ -83,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
             $user = $stmt->fetch();
 
             if ($user && password_verify($motdepasse, $user['motdepasse'])) {
+                session_regenerate_id(true);
                 $_SESSION['user_id'] = $user['identifiant'];
                 $_SESSION['role']    = $user['role'];
 
@@ -126,6 +129,7 @@ require_once __DIR__ . '/../includes/header.php';
             <?php endif; ?>
 
             <form action="login.php" method="post">
+                <?php echo csrf_input(); ?>
                 <div class="form-group">
                     <label for="identifiant" class="form-label">Identifiant</label>
                     <input
@@ -134,7 +138,7 @@ require_once __DIR__ . '/../includes/header.php';
                         name="identifiant"
                         class="form-control"
                         placeholder="Votre identifiant"
-                        value="<?= htmlspecialchars($identifiantSaisi); ?>"
+                        value="<?= htmlspecialchars($submittedUsername); ?>"
                     >
                 </div>
 

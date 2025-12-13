@@ -1,8 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/bootstrap.php';
 
+// header commun (nav + statut utilisateur)
 $isLoggedIn = isset($_SESSION['user_id']);
 $isAdmin    = $isLoggedIn && (isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
 
@@ -11,10 +10,7 @@ if (!isset($hideHeader)) {
     $hideHeader = false;
 }
 
-/*
- * $baseUrl = chemin du dossier courant dans l’URL
- * Exemple : /Mini-projet-musique/pages
- */
+// petit helper: chemin du dossier courant dans l'url (utile pour les liens)
 $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 ?>
 <!DOCTYPE html>
@@ -31,7 +27,7 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 <?php if (!$hideHeader): ?>
     <header class="site-header">
         <div class="container site-header-inner">
-            <a href="<?php echo $baseUrl; ?>../../index.php" class="brand">
+            <a href="<?php echo $baseUrl; ?>/../index.php" class="brand">
                 <div class="brand-logo">♫</div>
                 <div class="brand-text">
                     <span class="brand-title">Médiathèque musique</span>
@@ -57,6 +53,7 @@ $baseUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
                         <form action="<?php echo $baseUrl; ?>/login.php" method="post">
                             <input type="hidden" name="action" value="logout">
+                            <?php echo csrf_input(); ?>
                             <button type="submit" class="btn btn-secondary">
                                 Déconnexion
                             </button>

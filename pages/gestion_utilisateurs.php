@@ -1,5 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/bootstrap.php';
+
+// page admin: gestion des comptes
+// - création (admin/user)
+// - changement de rôle
+// - suppression
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -23,6 +28,7 @@ $identifiant = '';
 $role        = 'user';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_require_post();
     $action = $_POST['action'] ?? '';
 
     /* ---------- Création d'un utilisateur ---------- */
@@ -33,12 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($identifiant === '') {
             $errors['identifiant'] = 'L’identifiant est obligatoire.';
+        } elseif (!preg_match('/^[A-Za-z0-9_-]{3,30}$/', $identifiant)) {
+            $errors['identifiant'] = 'Identifiant invalide (3-30 caractères : lettres, chiffres, _ ou -).';
         }
 
         if ($motdepasse === '') {
             $errors['motdepasse'] = 'Le mot de passe est obligatoire.';
-        } elseif (strlen($motdepasse) < 4) {
-            $errors['motdepasse'] = 'Le mot de passe doit contenir au moins 4 caractères.';
+        } elseif (strlen($motdepasse) < 8) {
+            $errors['motdepasse'] = 'Le mot de passe doit contenir au moins 8 caractères.';
         }
 
         if ($role !== 'admin' && $role !== 'user') {
@@ -80,15 +88,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+    /* ---------- changement de rôle ---------- */
+    } elseif ($action === 'set_role') {
+        $targetId = (int)($_POST['user_id'] ?? 0);
+        $newRole  = $_POST['role'] ?? 'user';
+
+        if ($newRole !== 'admin' && $newRole !== 'user') {
+            $newRole = 'user';
+        }
+
+        if ($targetId > 0) {
+            try {
+                // récupère l'identifiant pour éviter de s'auto-bloquer
+                $stmt = $pdo->prepare('SELECT identifiant FROM utilisateurs WHERE id = :id');
+                $stmt->execute([':id' => $targetId]);
+                $target = $stmt->fetch();
+
+                if (!$target) {
+                    $errors['global'] = 'Utilisateur introuvable.';
+                } elseif (($target['identifiant'] ?? '') === ($_SESSION['user_id'] ?? '')) {
+                    $errors['global'] = 'Tu ne peux pas modifier ton propre rôle.';
+                } else {
+                    $stmt = $pdo->prepare('UPDATE utilisateurs SET role = :role WHERE id = :id');
+                    $stmt->execute([
+                        ':role' => $newRole,
+                        ':id'   => $targetId,
+                    ]);
+                    $successMessage = 'Rôle mis à jour.';
+                }
+            } catch (PDOException $e) {
+                $errors['global'] = 'Impossible de modifier le rôle.';
+            }
+        }
+
     /* ---------- Suppression d'un utilisateur ---------- */
     } elseif ($action === 'delete') {
         $deleteId = (int)($_POST['user_id'] ?? 0);
 
         if ($deleteId > 0) {
             try {
-                $stmt = $pdo->prepare('DELETE FROM utilisateurs WHERE id = :id');
+                // évite la suppression du compte connecté
+                $stmt = $pdo->prepare('SELECT identifiant FROM utilisateurs WHERE id = :id');
                 $stmt->execute([':id' => $deleteId]);
-                $successMessage = 'Utilisateur supprimé.';
+                $target = $stmt->fetch();
+
+                if ($target && ($target['identifiant'] ?? '') === ($_SESSION['user_id'] ?? '')) {
+                    $errors['global'] = 'Tu ne peux pas supprimer ton propre compte.';
+                } else {
+                    $stmt = $pdo->prepare('DELETE FROM utilisateurs WHERE id = :id');
+                    $stmt->execute([':id' => $deleteId]);
+                    $successMessage = 'Utilisateur supprimé.';
+                }
             } catch (PDOException $e) {
                 $errors['global'] = 'Impossible de supprimer cet utilisateur.';
             }
@@ -98,7 +148,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Récupération de la liste des utilisateurs
 try {
-    $stmt = $pdo->query('SELECT id, identifiant, role FROM utilisateurs ORDER BY identifiant ASC');
+    $stmt = $pdo->prepare('SELECT id, identifiant, role FROM utilisateurs ORDER BY identifiant ASC');
+    $stmt->execute();
     $utilisateurs = $stmt->fetchAll();
 } catch (PDOException $e) {
     $utilisateurs = [];
@@ -140,6 +191,7 @@ require_once __DIR__ . '/../includes/header.php';
         <h2 class="section-title">Ajouter un utilisateur</h2>
 
         <form action="gestion_utilisateurs.php" method="post">
+            <?php echo csrf_input(); ?>
             <input type="hidden" name="action" value="create">
 
             <div class="form-group <?= isset($errors['identifiant']) ? 'error' : ''; ?>">
@@ -212,6 +264,7 @@ require_once __DIR__ . '/../includes/header.php';
                 </tr>
             <?php else: ?>
                 <?php foreach ($utilisateurs as $u): ?>
+                    <?php $isSelf = ($u['identifiant'] ?? '') === ($_SESSION['user_id'] ?? ''); ?>
                     <tr>
                         <td><?= htmlspecialchars($u['identifiant']); ?></td>
                         <td>
@@ -221,11 +274,27 @@ require_once __DIR__ . '/../includes/header.php';
                         </td>
                         <td>
                             <div class="table-actions">
+                                <form action="gestion_utilisateurs.php" method="post">
+                                    <?php echo csrf_input(); ?>
+                                    <input type="hidden" name="action" value="set_role">
+                                    <input type="hidden" name="user_id" value="<?= (int)$u['id']; ?>">
+
+                                    <select name="role" class="form-control" <?= $isSelf ? 'disabled' : ''; ?>>
+                                        <option value="user" <?= ($u['role'] ?? '') === 'user' ? 'selected' : ''; ?>>user</option>
+                                        <option value="admin" <?= ($u['role'] ?? '') === 'admin' ? 'selected' : ''; ?>>admin</option>
+                                    </select>
+
+                                    <button type="submit" class="btn btn-secondary" <?= $isSelf ? 'disabled' : ''; ?>>
+                                        Changer
+                                    </button>
+                                </form>
+
                                 <form action="gestion_utilisateurs.php" method="post"
                                       onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                                    <?php echo csrf_input(); ?>
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="user_id" value="<?= (int)$u['id']; ?>">
-                                    <button type="submit" class="btn btn-danger">
+                                    <button type="submit" class="btn btn-danger" <?= $isSelf ? 'disabled' : ''; ?>>
                                         Supprimer
                                     </button>
                                 </form>

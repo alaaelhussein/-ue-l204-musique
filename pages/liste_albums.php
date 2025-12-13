@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/bootstrap.php';
+
+// page catalogue + recherche
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -8,18 +10,15 @@ if (!isset($_SESSION['user_id'])) {
 
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 
-/* -------------------------
-   Connexion à la base
-   ------------------------- */
+// bdd
 require_once __DIR__ . '/../includes/db.php';
 
-/* -------------------------
-   Suppression d’un album (admin)
-   ------------------------- */
+// delete (admin)
 $successMessage = null;
 $errorMessage   = null;
 
 if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    csrf_require_post();
     $deleteId = (int) $_POST['delete_id'];
 
     if ($deleteId > 0) {
@@ -33,11 +32,23 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id
     }
 }
 
-/* -------------------------
-   Récupération + recherche
-   ------------------------- */
+// filtres (get)
 $searchTitleArtist = trim($_GET['q'] ?? '');
 $searchYear        = trim($_GET['annee'] ?? '');
+
+// Validation "poussée" côté serveur (simplifiée)
+if ($searchTitleArtist !== '' && mb_strlen($searchTitleArtist, 'UTF-8') > 100) {
+    $searchTitleArtist = mb_substr($searchTitleArtist, 0, 100, 'UTF-8');
+    $errorMessage = $errorMessage ?? 'La recherche est trop longue (max 100 caractères).';
+}
+
+if ($searchYear !== '') {
+    $currentYear = (int)date('Y') + 1;
+    if (!ctype_digit($searchYear) || strlen($searchYear) !== 4 || (int)$searchYear < 1900 || (int)$searchYear > $currentYear) {
+        $searchYear = '';
+        $errorMessage = $errorMessage ?? 'Année de sortie invalide.';
+    }
+}
 
 $sql = 'SELECT id, nom_cd, artiste, annee_sortie FROM albums WHERE 1';
 $params = [];
@@ -58,9 +69,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $albums = $stmt->fetchAll();
 
-/* -------------------------
-   Affichage
-   ------------------------- */
+// affichage
 $hideHeader = false;
 require_once __DIR__ . '/../includes/header.php';
 ?>
@@ -172,6 +181,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 <form action="liste_albums.php"
                                       method="post"
                                       onsubmit="return confirm('Supprimer cet album ?');">
+                                    <?php echo csrf_input(); ?>
                                     <input type="hidden" name="delete_id"
                                            value="<?= (int) $album['id']; ?>">
                                     <button type="submit" class="btn btn-danger">

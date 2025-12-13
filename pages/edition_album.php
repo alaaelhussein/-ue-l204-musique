@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/bootstrap.php';
+
+// admin: édition album
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -12,20 +14,24 @@ if (!$isAdmin) {
     exit;
 }
 
-/* Connexion BDD commune */
+// bdd
 require_once __DIR__ . '/../includes/db.php';
 
 $errors = [];
 $successMessage = null;
 
-/* Récupération de l'ID */
+// id album
 $albumId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$albumId) {
     header('Location: liste_albums.php');
     exit;
 }
 
-/* Suppression depuis cette page */
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+    csrf_require_post();
+}
+
+// delete
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     try {
         $stmt = $pdo->prepare('DELETE FROM albums WHERE id = :id');
@@ -38,12 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
     }
 }
 
-/* Initialisation des champs */
+// valeurs affichées
 $titre   = '';
 $artiste = '';
 $annee   = '';
 
-/* Récupérer l'album pour pré-remplir */
+// charge l'album
 try {
     $stmt = $pdo->prepare('SELECT nom_cd, artiste, annee_sortie FROM albums WHERE id = :id');
     $stmt->execute([':id' => $albumId]);
@@ -60,7 +66,7 @@ if (!$album) {
     $annee   = $album['annee_sortie'];
 }
 
-/* Traitement de la mise à jour */
+// save
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save' && $album) {
 
     $titre   = trim($_POST['titre'] ?? '');
@@ -135,6 +141,7 @@ require_once __DIR__ . '/../includes/header.php';
 <section class="page-section">
     <div class="form-layout">
         <form action="edition_album.php?id=<?= (int)$albumId; ?>" method="post">
+            <?php echo csrf_input(); ?>
             <div class="form-group <?= isset($errors['titre']) ? 'error' : ''; ?>">
                 <label for="titre" class="form-label">Titre de l’album</label>
                 <input

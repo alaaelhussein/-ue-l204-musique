@@ -1,5 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/bootstrap.php';
+
+// admin: ajout album
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -13,7 +15,7 @@ if (!$isAdmin) {
     exit;
 }
 
-/* Connexion BDD commune */
+// bdd
 require_once __DIR__ . '/../includes/db.php';
 
 $errors = [];
@@ -24,11 +26,12 @@ $artiste = '';
 $annee   = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_require_post();
     $titre   = trim($_POST['titre'] ?? '');
     $artiste = trim($_POST['artiste'] ?? '');
     $annee   = trim($_POST['annee'] ?? '');
 
-    // Validation simple
+    // checks simples
     if ($titre === '') {
         $errors['titre'] = 'Le titre de l’album est obligatoire.';
     }
@@ -98,6 +101,7 @@ require_once __DIR__ . '/../includes/header.php';
 <section class="page-section">
     <div class="form-layout">
         <form action="ajout_album.php" method="post">
+            <?php echo csrf_input(); ?>
             <div class="form-group <?= isset($errors['titre']) ? 'error' : ''; ?>">
                 <label for="titre" class="form-label">Titre de l’album</label>
                 <input

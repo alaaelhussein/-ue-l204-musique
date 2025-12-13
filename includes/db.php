@@ -1,9 +1,8 @@
 <?php
-// includes/db.php
-
+// bdd (pdo)
 $dsn  = 'mysql:host=localhost;dbname=musique;charset=utf8mb4';
-$user = 'root';   // XAMPP par défaut
-$pass = '';       // mot de passe vide par défaut
+$user = 'root';
+$pass = '';
 
 try {
     $pdo = new PDO($dsn, $user, $pass, [
