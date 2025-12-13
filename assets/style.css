@@ -461,9 +461,19 @@ body {
     opacity: 0.7;
     pointer-events: none;
     position: absolute;
-    top: calc(50% + 0.85rem);
-    transform: translateY(-50%);
+    bottom: 0.65rem;
     width: 16px;
+}
+
+.search-with-icon-icon svg {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.search-bar .btn {
+    padding-bottom: 0.65rem;
+    padding-top: 0.65rem;
 }
 
 .search-with-icon .form-control {

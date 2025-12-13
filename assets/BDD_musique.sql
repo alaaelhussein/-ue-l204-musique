@@ -107,8 +107,8 @@ CREATE TABLE `utilisateurs` (
 
 -- --------------------------------------------------------
 -- AH: test accounts
--- administrateur  : test1234!
--- utilisateur1..19: test1234!
+-- Administrateur  : Test1234!
+-- Utilisateur1..19: Test1234!
 -- --------------------------------------------------------
 
 INSERT INTO `utilisateurs` (`id`, `identifiant`, `motdepasse`, `role`) VALUES

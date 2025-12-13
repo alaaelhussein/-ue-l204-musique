@@ -162,7 +162,7 @@ require_once __DIR__ . '/../includes/header.php';
             </form>
 
             <div class="auth-footer-links">
-                <a href="index.php">Retour à l'accueil</a>
+                <a href="<?php echo BASE_URL; ?>/index.php">Retour à l'accueil</a>
             </div>
         </div>
     </div>
