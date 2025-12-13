@@ -1,5 +1,6 @@
 <?php
-$host = 'localhost';
+$host = '127.0.0.1';
+$port = '3308';
 $dbname = 'musique';
 $user = 'root';
 $pass = ''; // si tu as mis un mot de passe MySQL, écris-le ici
