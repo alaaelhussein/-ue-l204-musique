@@ -1,10 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
 
-// page admin: gestion des comptes
-// - création (admin/user)
-// - changement de rôle
-// - suppression
+// AS: admin page to manage user accounts
+// AS: responsibilities: create accounts, change roles, delete accounts, and keep ux consistent
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -17,13 +15,13 @@ if (!$isAdmin) {
     exit;
 }
 
-/* Connexion BDD commune */
+// AS: db access
 require_once __DIR__ . '/../includes/db.php';
 
 $errors = [];
 $successMessage = null;
 
-// Valeurs pour le formulaire d'ajout
+// AS: values for the create-user form
 $identifiant = '';
 $role        = 'user';
 
@@ -31,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_require_post();
     $action = $_POST['action'] ?? '';
 
-    /* ---------- Création d'un utilisateur ---------- */
+    // AS: create a user
     if ($action === 'create') {
         $identifiant = trim($_POST['identifiant'] ?? '');
         $motdepasse  = $_POST['motdepasse'] ?? '';
@@ -53,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $role = 'user';
         }
 
-        // Vérifier si l'identifiant existe déjà
+        // AS: check if identifiant already exists
         if (empty($errors)) {
             try {
                 $stmt = $pdo->prepare('SELECT id FROM utilisateurs WHERE identifiant = :identifiant');
@@ -88,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-    /* ---------- changement de rôle ---------- */
+    // AS: change role
     } elseif ($action === 'set_role') {
         $targetId = (int)($_POST['user_id'] ?? 0);
         $newRole  = $_POST['role'] ?? 'user';
@@ -99,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($targetId > 0) {
             try {
-                // récupère l'identifiant pour éviter de s'auto-bloquer
+                // AS: prevent self role change (avoid locking yourself out)
                 $stmt = $pdo->prepare('SELECT identifiant FROM utilisateurs WHERE id = :id');
                 $stmt->execute([':id' => $targetId]);
                 $target = $stmt->fetch();
@@ -121,13 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-    /* ---------- Suppression d'un utilisateur ---------- */
+    // AS: delete a user
     } elseif ($action === 'delete') {
         $deleteId = (int)($_POST['user_id'] ?? 0);
 
         if ($deleteId > 0) {
             try {
-                // évite la suppression du compte connecté
+                // AS: prevent deleting the currently logged-in account
                 $stmt = $pdo->prepare('SELECT identifiant FROM utilisateurs WHERE id = :id');
                 $stmt->execute([':id' => $deleteId]);
                 $target = $stmt->fetch();
@@ -146,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Récupération de la liste des utilisateurs
+// AS: load user list
 try {
     $stmt = $pdo->prepare('SELECT id, identifiant, role FROM utilisateurs ORDER BY identifiant ASC');
     $stmt->execute();
@@ -185,7 +183,7 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
 <?php endif; ?>
 
-<!-- Section : création d'utilisateur -->
+<!-- AS: create user section -->
 <section class="page-section">
     <div class="form-layout">
         <h2 class="section-title">Ajouter un utilisateur</h2>
@@ -244,7 +242,7 @@ require_once __DIR__ . '/../includes/header.php';
     </div>
 </section>
 
-<!-- Section : liste des utilisateurs -->
+<!-- AS: user list section -->
 <section class="page-section">
     <h2 class="section-title">Liste des utilisateurs</h2>
 
@@ -310,3 +308,4 @@ require_once __DIR__ . '/../includes/header.php';
 
 <?php
 require_once __DIR__ . '/../includes/footer.php';
+

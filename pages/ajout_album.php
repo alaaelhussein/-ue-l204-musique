@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/bootstrap.php';
 
-// admin: ajout album
+// MF: admin page to add an album (create)
+// MF: responsibilities: server-side validation, insert query, and success/error feedback
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -15,7 +16,7 @@ if (!$isAdmin) {
     exit;
 }
 
-// bdd
+// MF: db access
 require_once __DIR__ . '/../includes/db.php';
 
 $errors = [];
@@ -31,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $artiste = trim($_POST['artiste'] ?? '');
     $annee   = trim($_POST['annee'] ?? '');
 
-    // checks simples
+    // MF: simple field checks
     if ($titre === '') {
         $errors['titre'] = 'Le titre de l’album est obligatoire.';
     }
@@ -58,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
 
             $successMessage = 'Album ajouté avec succès.';
-            // On vide le formulaire après succès
+            // MF: clear the form after a successful insert
             $titre = '';
             $artiste = '';
             $annee = '';
@@ -167,3 +168,4 @@ require_once __DIR__ . '/../includes/header.php';
 
 <?php
 require_once __DIR__ . '/../includes/footer.php';
+

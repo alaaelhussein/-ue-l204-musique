@@ -1,11 +1,14 @@
--- phpMyAdmin SQL Dump
+-- AH: mysql database schema + seed data for the project
+-- AH: tables: albums, utilisateurs (includes test accounts)
+--
+-- phpmyadmin sql dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1
--- Généré le : mar. 02 déc. 2025 à 15:22
--- Version du serveur : 10.4.32-MariaDB
--- Version de PHP : 8.2.12
+-- hôte : 127.0.0.1
+-- généré le : mar. 02 déc. 2025 à 15:22
+-- version du serveur : 10.4.32-mariadb
+-- version de php : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +21,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `musique`
+-- base de données : `musique`
 --
 
 CREATE DATABASE IF NOT EXISTS `musique` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -27,7 +30,7 @@ USE `musique`;
 -- --------------------------------------------------------
 
 --
--- Structure de la table `albums`
+-- structure de la table `albums`
 --
 
 CREATE TABLE `albums` (
@@ -38,7 +41,7 @@ CREATE TABLE `albums` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `albums`
+-- déchargement des données de la table `albums`
 --
 
 INSERT INTO `albums` (`id`, `nom_cd`, `artiste`, `annee_sortie`) VALUES
@@ -88,7 +91,7 @@ INSERT INTO `albums` (`id`, `nom_cd`, `artiste`, `annee_sortie`) VALUES
 -- --------------------------------------------------------
 
 --
--- Structure de la table `utilisateurs`
+-- structure de la table `utilisateurs`
 --
 
 CREATE TABLE `utilisateurs` (
@@ -99,12 +102,13 @@ CREATE TABLE `utilisateurs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Déchargement des données de la table `utilisateurs`
+-- déchargement des données de la table `utilisateurs`
 --
 
 -- --------------------------------------------------------
--- Administrateur  : Test1234!
--- Utilisateur1..19: Test1234!
+-- AH: test accounts
+-- administrateur  : test1234!
+-- utilisateur1..19: test1234!
 -- --------------------------------------------------------
 
 INSERT INTO `utilisateurs` (`id`, `identifiant`, `motdepasse`, `role`) VALUES
@@ -130,34 +134,34 @@ INSERT INTO `utilisateurs` (`id`, `identifiant`, `motdepasse`, `role`) VALUES
 (20, 'Utilisateur19', '$2y$10$/r/5/cytiMlzCQ533Nw7Ce/35FtnyQjrsl66Vw.5DQo5Jg/Yklvrq', 'user');
 
 --
--- Index pour les tables déchargées
+-- index pour les tables déchargées
 --
 
 --
--- Index pour la table `albums`
+-- index pour la table `albums`
 --
 ALTER TABLE `albums`
   ADD PRIMARY KEY (`id`);
 
 --
--- Index pour la table `utilisateurs`
+-- index pour la table `utilisateurs`
 --
 ALTER TABLE `utilisateurs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `identifiant` (`identifiant`);
 
 --
--- AUTO_INCREMENT pour les tables déchargées
+-- auto_increment pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT pour la table `albums`
+-- auto_increment pour la table `albums`
 --
 ALTER TABLE `albums`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
--- AUTO_INCREMENT pour la table `utilisateurs`
+-- auto_increment pour la table `utilisateurs`
 --
 ALTER TABLE `utilisateurs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
