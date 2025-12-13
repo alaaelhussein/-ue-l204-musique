@@ -11,8 +11,9 @@ if (!isset($hideHeader)) {
     $hideHeader = false;
 }
 
-// AS: compute root url (works for /index.php and /pages/*.php, even in a subfolder)
-$rootUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'], 2), '/\\');
+// AS: use the centralized base url from bootstrap
+// AS: BASE_URL is "" at web root, or "/subfolder" when the project is hosted under a subfolder
+$rootUrl = BASE_URL;
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -20,7 +21,7 @@ $rootUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'], 2), '/\\');
     <meta charset="UTF-8">
     <title>Médiathèque musique</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- AS: stylesheet served from the project root -->
+    <!-- AS: stylesheet path is built from BASE_URL to work on /index.php and /pages/*.php -->
     <link rel="stylesheet" href="<?php echo $rootUrl; ?>/assets/style.css">
 </head>
 <body>

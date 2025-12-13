@@ -38,9 +38,20 @@ $searchTitleArtist = trim($_GET['q'] ?? '');
 $searchYear        = trim($_GET['annee'] ?? '');
 
 // MS: lightweight server-side validation
-if ($searchTitleArtist !== '' && mb_strlen($searchTitleArtist, 'UTF-8') > 100) {
-    $searchTitleArtist = mb_substr($searchTitleArtist, 0, 100, 'UTF-8');
-    $errorMessage = $errorMessage ?? 'La recherche est trop longue (max 100 caractères).';
+// MS: portability note: some php installs (often wamp) may not have mbstring enabled
+// MS: fallback to core string functions so the page still works everywhere
+if ($searchTitleArtist !== '') {
+    $queryLength = function_exists('mb_strlen')
+        ? mb_strlen($searchTitleArtist, 'UTF-8')
+        : strlen($searchTitleArtist);
+
+    if ($queryLength > 100) {
+        $searchTitleArtist = function_exists('mb_substr')
+            ? mb_substr($searchTitleArtist, 0, 100, 'UTF-8')
+            : substr($searchTitleArtist, 0, 100);
+
+        $errorMessage = $errorMessage ?? 'La recherche est trop longue (max 100 caractères).';
+    }
 }
 
 if ($searchYear !== '') {
@@ -58,7 +69,11 @@ $params = [];
 
 if ($searchTitleArtist !== '') {
     $where[] = '(LOWER(nom_cd) LIKE :q OR LOWER(artiste) LIKE :q)';
-    $params[':q'] = '%' . mb_strtolower($searchTitleArtist, 'UTF-8') . '%';
+    $qLower = function_exists('mb_strtolower')
+        ? mb_strtolower($searchTitleArtist, 'UTF-8')
+        : strtolower($searchTitleArtist);
+
+    $params[':q'] = '%' . $qLower . '%';
 }
 
 if ($searchYear !== '') {

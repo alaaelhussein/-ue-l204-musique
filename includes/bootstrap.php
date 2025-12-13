@@ -22,3 +22,22 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/csrf.php';
 
+// AS: base url for links/assets (fixes missing css when project is in a subfolder)
+// AS: why this exists: relative paths like "./assets/style.css" break on /pages/*.php (they become /pages/assets/...)
+// AS: solution: compute the project base once, then reuse it everywhere as BASE_URL
+
+// AS: get the current script folder from the request (examples: /index.php -> /, /pages/login.php -> /pages)
+$scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
+// AS: normalize windows backslashes (if any) to forward slashes (url-style)
+$scriptDir = str_replace('\\', '/', $scriptDir);
+// AS: remove trailing slash so pattern checks are predictable ("/pages/" -> "/pages")
+$scriptDir = rtrim($scriptDir, '/');
+
+// AS: if the current script lives under /pages, the project root is one level up; otherwise it is the current dir
+$baseUrl = preg_match('#/pages$#', $scriptDir) ? dirname($scriptDir) : $scriptDir;
+// AS: normalize edge cases to an empty base ("" makes links like "/assets/style.css" when concatenated)
+$baseUrl = ($baseUrl === '/' || $baseUrl === '.' || $baseUrl === '') ? '' : $baseUrl;
+
+// AS: expose BASE_URL to all includes/pages (used by header/footer for links and css)
+define('BASE_URL', $baseUrl);
+

@@ -1,7 +1,7 @@
 <?php
 // AS: shared footer layout
-// AS: keeps links stable by targeting project-root paths
-$rootUrl = rtrim(dirname($_SERVER['SCRIPT_NAME'], 2), '/\\');
+// AS: use the centralized base url from bootstrap for stable links in subfolders
+$rootUrl = defined('BASE_URL') ? BASE_URL : '';
 ?>
         </div> <!-- .container -->
     </main>
