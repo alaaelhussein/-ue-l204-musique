@@ -1,0 +1,30 @@
+INFOS D’INSTALLATION / EXÉCUTION (projet UE L204 — médiathèque musique)
+
+Outil utilisé
+- nous avons utilisé XAMPP pour exécuter le projet (Apache + PHP + MariaDB/MySQL).
+- aucune info “mot de passe phpMyAdmin” n’est fournie ici : cela dépend de votre installation locale.
+
+Important (pour éviter les bugs “boutons ne marchent pas”)
+- lancez le projet via Apache (URL http://...) et pas en ouvrant les fichiers .php directement dans le navigateur.
+
+Base de données
+- la base est fournie sous forme de dump SQL : assets/BDD_musique.sql
+- il faut l’importer dans votre serveur MySQL/MariaDB (souvent via phpMyAdmin) avant d’utiliser le site.
+
+Variables d’environnement PDO (connexion MySQL)
+Le projet peut lire ces variables (si elles existent) pour configurer la connexion :
+- DB_HOST : hôte MySQL (ex: 127.0.0.1 ou localhost)
+- DB_PORT : port MySQL (optionnel). si absent, le projet essaie des ports courants.
+- DB_NAME : nom de la base (ex: musique)
+- DB_USER : utilisateur MySQL (ex: root)
+- DB_PASS : mot de passe MySQL (ex: vide sur certaines installations locales)
+
+Notes de compatibilité (XAMPP/WAMP)
+- certains environnements n’ont pas le même port MySQL. si DB_PORT n’est pas défini, le projet peut tester des ports fréquents (ex: 3306 / 3308 / 3305).
+
+Exemple (optionnel)
+- DB_HOST=127.0.0.1
+- DB_PORT=3306
+- DB_NAME=musique
+- DB_USER=root
+- DB_PASS=
