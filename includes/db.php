@@ -3,17 +3,28 @@
 // AH: defaults target common local stacks (xampp/wamp) but can be overridden via env vars
 // AS: should fix xampp/wamp issues when mysql runs on a different port (3306/3308/3305)
 
-// AH: read configuration from environment when available
+// AH: first try to read credentials from a local file (required in the assignment deliverables)
+// AH: file must return an array with keys: host, name, user, pass, port
+$credentials = [];
+$credentialsFile = __DIR__ . '/db.credentials.php';
+if (is_file($credentialsFile)) {
+    $loaded = require $credentialsFile;
+    if (is_array($loaded)) {
+        $credentials = $loaded;
+    }
+}
+
+// AH: then fallback to environment when available
 // AH: getenv() returns false when a variable is not set, so we fallback to a default value
-$dbHost = getenv('DB_HOST') ?: 'localhost'; // AH: mysql hostname (usually localhost)
-$dbName = getenv('DB_NAME') ?: 'musique';   // AH: database name created by the sql dump
-$dbUser = getenv('DB_USER') ?: 'root';      // AH: mysql username (default root on local stacks)
-$dbPass = getenv('DB_PASS') ?: '';          // AH: mysql password (empty by default on many local stacks)
+$dbHost = $credentials['host'] ?? (getenv('DB_HOST') ?: 'localhost');
+$dbName = $credentials['name'] ?? (getenv('DB_NAME') ?: 'musique');
+$dbUser = $credentials['user'] ?? (getenv('DB_USER') ?: 'root');
+$dbPass = $credentials['pass'] ?? (getenv('DB_PASS') ?: '');
 
 // AH: optional explicit port override
 // AH: if DB_PORT is set, we only try that port; otherwise we try common ports
 // AS: wamp often ends up on 3308 or 3305 when 3306 is already taken
-$dbPort = getenv('DB_PORT');
+$dbPort = $credentials['port'] ?? getenv('DB_PORT');
 $portsToTry = ($dbPort !== false && $dbPort !== '')
     ? [$dbPort]
     : ['3306', '3308', '3305'];
